@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import logo from '/images/App1.png';
 import { UserPlus, LogOut } from 'lucide-react';
-
+import { usePage } from '@inertiajs/react';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -16,6 +16,8 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  const { url } = usePage();
+const isActive = (path: string) => url === path;  
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? 'bg-black/40 backdrop-blur-sm shadow-md' : 'bg-transparent'
@@ -27,25 +29,26 @@ export default function Header() {
         <div className="flex-1">
         <ul className="flex space-x-6 text-lg justify-center ml-[-2px]">
           <li>
-            <a
-              href="#"
-              className={`hover:text-gray-300 ${
-                window.location.pathname === "/#" ? "text-brown-700" : ""
-              }`}
-            >
-              Acceuil
-            </a>
-          </li>
+  {window.location.pathname === "/" ? (
+    <span className="text-brown-700 cursor-default">Acceuil</span>
+  ) : (
+    <Link
+      href="/"
+      className="hover:text-gray-300"
+    >
+      Acceuil
+    </Link>
+  )}
+</li>
           <li>
-            <a
-              href="/proprietes"
-              className={`text-gray-300 hover:text-white ${
-                window.location.pathname === "/proprietes" ? "text-brown-700" : ""
-              }`}
-            >
-              Proprietes
-            </a>
-          </li>
+  <Link
+    href="/proprietes"
+    className={`hover:text-white ${isActive("/proprietes") ? "text-brown-700" : "text-gray-300"}`}
+  >
+    Propriétés
+  </Link>
+</li>
+
           <li>
             {/*<a href="/maisons" className={`text-gray-200 hover:text-white ${
               window.location.pathname === "/maisons" ? "text-brown-700" : ""
@@ -54,22 +57,24 @@ export default function Header() {
               Maisons
             </a>*/}
           </li>
+         <li>
+  <Link
+    href={route("a-propos")}
+    className={`hover:text-white ${isActive("/a-propos") ? "text-brown-700" : "text-gray-300"}`}
+  >
+    A Propos
+  </Link>
+</li>
+
           <li>
-            <a href="/a propos" className={`text-gray-300 hover:text-white ${
-              window.location.pathname === "/a propos" ? "text-brown-700" : ""
-            }`}
-            >
-              A Propos
-            </a>
-          </li>
-          <li>
-            <a href="/contact" className={`text-gray-300 hover:text-white ${
-              window.location.pathname === "/contact" ? "text-brown-700" : ""
-            }`}
-            >
-              Contact
-            </a>
-          </li>
+  <Link
+    href="/contact"
+    className={`hover:text-white ${isActive("/contact") ? "text-brown-700" : "text-gray-300"}`}
+  >
+    Contact
+  </Link>
+</li>
+
         </ul>
         </div>
         <div className="flex items-center gap-5">
@@ -87,7 +92,6 @@ export default function Header() {
   </a>*/}
         <button className="bg-brown-700 text-white px-3 py-3 text-sm rounded-full hover:bg-transparent hover:scale-105 transition-transform duration-300">Publier un bien</button>
         </div>
-
       </nav>
     </header>
   );
